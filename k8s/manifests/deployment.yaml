@@ -20,3 +20,5 @@ spec:
         image: eu-frankfurt-1.ocir.io/frmi31k5kitr/go-app
         ports:
         - containerPort: 8080
+      imagePullSecrets:
+      - name: docker-registry
