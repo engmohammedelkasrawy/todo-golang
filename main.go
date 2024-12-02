@@ -1,34 +1,39 @@
 package main
 
 import (
-	"errors"
-	"github.com/ichtrojan/go-todo/routes"
-	"github.com/ichtrojan/thoth"
-	"github.com/joho/godotenv"
 	"log"
 	"net/http"
-	"os"
 )
 
+func homePage(w http.ResponseWriter, r *http.Request) {
+	// Render the home html page from static folder
+	http.ServeFile(w, r, "static/home.html")
+}
+
+func coursePage(w http.ResponseWriter, r *http.Request) {
+	// Render the course html page
+	http.ServeFile(w, r, "static/courses.html")
+}
+
+func aboutPage(w http.ResponseWriter, r *http.Request) {
+	// Render the about html page
+	http.ServeFile(w, r, "static/about.html")
+}
+
+func contactPage(w http.ResponseWriter, r *http.Request) {
+	// Render the contact html page
+	http.ServeFile(w, r, "static/contact.html")
+}
+
 func main() {
-	logger, _ := thoth.Init("log")
 
-	if err := godotenv.Load(); err != nil {
-		logger.Log(errors.New("no .env file found"))
-		log.Fatal("No .env file found")
-	}
+	http.HandleFunc("/home", homePage)
+	http.HandleFunc("/courses", coursePage)
+	http.HandleFunc("/about", aboutPage)
+	http.HandleFunc("/contact", contactPage)
 
-	port, exist := os.LookupEnv("PORT")
-
-	if !exist {
-		logger.Log(errors.New("PORT not set in .env"))
-		log.Fatal("PORT not set in .env")
-	}
-
-	err := http.ListenAndServe(":"+port, routes.Init())
-
+	err := http.ListenAndServe("0.0.0.0:8080", nil)
 	if err != nil {
-		logger.Log(err)
 		log.Fatal(err)
 	}
 }
